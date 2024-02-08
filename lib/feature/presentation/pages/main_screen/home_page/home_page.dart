@@ -186,12 +186,17 @@ class _HomePageState extends State<HomePage> {
                             )
                           ],
                         ),
+
                         verticalSpace(5),
                         Container(
                           width: double.infinity,
                           height: MediaQuery.of(context).size.height * 0.7,
-                          color: Colors.white24,
+                          decoration: BoxDecoration(
+                            color: Colors.white24,
+                            // image: DecorationImage(image: NetworkImage(  )   )
+                          ),
                         ),
+
                         verticalSpace(5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

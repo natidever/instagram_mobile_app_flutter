@@ -58,23 +58,23 @@ class _ProfilePageState extends State<ProfilePage>
   //   }
   // }
 
-  Future<List<dynamic>> getUserPosts() async {
-    String userPostEndPoint = "http://10.0.2.2:8000/postedImage/";
-    Uri uri = Uri.parse(userPostEndPoint);
-    String? token = await storage.read(key: 'token');
+  // Future<List<dynamic>> getUserPosts() async {
+  //   String userPostEndPoint = "http://10.0.2.2:8000/postedImage/";
+  //   Uri uri = Uri.parse(userPostEndPoint);
+  //   String? token = await storage.read(key: 'token');
 
-    var request = await http.get(uri, headers: {
-      'Authorization': 'Bearer $token',
-    });
+  //   var request = await http.get(uri, headers: {
+  //     'Authorization': 'Bearer $token',
+  //   });
 
-    if (request.statusCode == 200) {
-      var body = jsonDecode(request.body);
-      return body;
-    } else {
-      print('error user on user post ${request.statusCode}');
-      throw Exception('failed to fetch');
-    }
-  }
+  //   if (request.statusCode == 200) {
+  //     var body = jsonDecode(request.body);
+  //     return body;
+  //   } else {
+  //     print('error user on user post ${request.statusCode}');
+  //     throw Exception('failed to fetch');
+  //   }
+  // }
 
   _bottomhseet(BuildContext context) {
     return showModalBottomSheet(
@@ -402,7 +402,8 @@ class _ProfilePageState extends State<ProfilePage>
                     child: Container(
                       child: TabBarView(controller: _tabController, children: [
                         FutureBuilder(
-                            future: getUserPosts(),
+                            // future: getUserPosts(),
+                            future: Get.find<ConstantAPICalls>().getUserPosts(),
                             builder: ((context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
