@@ -13,6 +13,7 @@ import '../../../widget/flexiible_button_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -105,6 +106,7 @@ class _ProfilePageState extends State<ProfilePage>
             print('Error:${snapshot.error}');
             return Text('Connection error');
           } else {
+            print('profilesnapshot-${snapshot.data}');
             userbio = snapshot.data!['bio'];
             return Scaffold(
               backgroundColor: backgroundColor,
@@ -228,8 +230,11 @@ class _ProfilePageState extends State<ProfilePage>
                             CircleAvatar(
                               radius: 42,
                               // backgroundImage: AssetImage('assets/4.jpg'),
-                              backgroundImage: NetworkImage(
-                                  '$profilePictureUrl${snapshot.data!['profile_picture']}'),
+                              backgroundImage: CachedNetworkImageProvider(
+                                ' $profilePictureUrl${snapshot.data!['profile_picture']}',
+                              ),
+                              // backgroundImage: NetworkImage(
+                              //     '$profilePictureUrl${snapshot.data!['profile_picture']   }'),
                             ),
                             verticalSpace(10),
                             Text(
