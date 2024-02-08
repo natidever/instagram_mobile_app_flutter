@@ -6,11 +6,13 @@ import 'package:instagram_clone/colors.dart';
 import 'package:instagram_clone/feature/presentation/pages/main_screen/profile/editprofile.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_client_helper/http_client_helper.dart';
+import 'package:instagram_clone/feature/services/constantAPIcalls.dart';
 import 'package:instagram_clone/feature/services/model.dart';
 import '../../../widget/button_widget.dart';
 import '../../../widget/flexiible_button_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -25,35 +27,35 @@ class _ProfilePageState extends State<ProfilePage>
     // _tabController = new TabController(length: 2, vsync: this);
     super.initState();
     //  etUserData();
-    getUserData();
+    // getUserData();
   }
 
   final storage = new FlutterSecureStorage();
 
-  Future<Map<String, dynamic>> getUserData() async {
-    String? username = await storage.read(key: 'username');
-    String? password = await storage.read(key: 'password');
-    print('storedpassword:$password');
-    print('storedusername:$username');
-    String? token = await storage.read(key: 'token');
-    print('usertoken:$token ');
+  // Future<Map<String, dynamic>> getUserData() async {
+  //   String? username = await storage.read(key: 'username');
+  //   String? password = await storage.read(key: 'password');
+  //   print('storedpassword:$password');
+  //   print('storedusername:$username');
+  //   String? token = await storage.read(key: 'token');
+  //   print('usertoken:$token ');
 
-    final String getUserDataEndPoint = 'http://10.0.2.2:8000/userdata/';
-    final response = await HttpClientHelper.get(
-      Uri.parse(getUserDataEndPoint),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-    if (response!.statusCode == 200) {
-      var body = jsonDecode(response.body);
+  //   final String getUserDataEndPoint = 'http://10.0.2.2:8000/userdata/';
+  //   final response = await HttpClientHelper.get(
+  //     Uri.parse(getUserDataEndPoint),
+  //     headers: {'Authorization': 'Bearer $token'},
+  //   );
+  //   if (response!.statusCode == 200) {
+  //     var body = jsonDecode(response.body);
 
-      // print('body:$body');
-      // print('username:${body['user']['username']}')
-      return body;
-    } else {
-      print('statuscode:${response.statusCode}');
-      throw Exception('Failed to fetch userdata');
-    }
-  }
+  //     // print('body:$body');
+  //     // print('username:${body['user']['username']}')
+  //     return body;
+  //   } else {
+  //     print('statuscode:${response.statusCode}');
+  //     throw Exception('Failed to fetch userdata');
+  //   }
+  // }
 
   Future<List<dynamic>> getUserPosts() async {
     String userPostEndPoint = "http://10.0.2.2:8000/postedImage/";
@@ -92,7 +94,8 @@ class _ProfilePageState extends State<ProfilePage>
     TabController _tabController = new TabController(length: 3, vsync: this);
 
     return FutureBuilder(
-        future: getUserData(),
+        // future: getUserData(),
+        future: Get.find<ConstantAPICalls>().getUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -404,6 +407,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 );
                               } else if (snapshot.hasData) {
                                 print('data${snapshot.data}');
+
                                 List<dynamic> data = snapshot.data ?? [];
                                 List<Post> posts = data
                                     .map((item) => Post.fromJson(item))
@@ -422,8 +426,10 @@ class _ProfilePageState extends State<ProfilePage>
                                       return Container(
                                           width: 100,
                                           height: 200,
-                                          child: Image.network(
-                                              '$baseAddress${post.postedImage}'));
+                                          child: Image.network(errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Text('failed to load image');
+                                          }, '$baseAddress${post.postedImage}'));
                                     });
                               } else if (snapshot.hasError) {
                                 print("gettingposterror-${snapshot.error}");
