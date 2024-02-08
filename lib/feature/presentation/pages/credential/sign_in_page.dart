@@ -72,9 +72,16 @@ class _SignInPageState extends State<SignInPage> {
       if (response!.statusCode == 200) {
         print('success');
         final token = jsonDecode(response.body)['access'];
+        final refreshToken = jsonDecode(response.body)['refresh'];
+        print('refreshtoken:$refreshToken');
         print('bodyy:${response.body}');
         await storage.write(key: 'token', value: token);
+        await storage.write(key: 'refreshToken', value: refreshToken);
+
         String? checktoken = await storage.read(key: 'token');
+        String? rchecktoken = await storage.read(key: 'refreshToken');
+        print('storedrefreshtoken: $rchecktoken');
+
         print('checktoke:$checktoken');
       } else {
         print('statuscode ${response.statusCode}');
@@ -86,6 +93,34 @@ class _SignInPageState extends State<SignInPage> {
       print('Error in request: $e');
     }
   }
+
+  // Future<void> getRefreshToken() async {
+  //   try {
+  //     print('getToken starts');
+  //     String? username = await storage.read(key: 'username');
+  //     String? password = await storage.read(key: 'password');
+  //     final tokenEndPoint = 'http://10.0.2.2:8000/api/token/refresh/';
+  //     print('before request');
+  //     final response = await HttpClientHelper.post(Uri.parse(tokenEndPoint),
+  //             body: {'username': username, 'password': password})
+  //         .timeout(Duration(seconds: 10));
+
+  //     if (response!.statusCode == 200) {
+  //       final refreshToken = jsonDecode(response.body)['refresh'];
+  //       print('refreshbodyy:${response.body}');
+  //       await storage.write(key: 'refreshToken', value: refreshToken);
+  //       String? checktoken = await storage.read(key: 'refreshToken');
+  //       print('refreshtoken:$checktoken');
+  //     } else {
+  //       print('statuscode ${response.statusCode}');
+  //       throw Exception('TOKEN refresh FUNCTION FAILED');
+  //     }
+  //   } on TimeoutException catch (e) {
+  //     print('request time out  $e');
+  //   } catch (e) {
+  //     print('Error in request: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

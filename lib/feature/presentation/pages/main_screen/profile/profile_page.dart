@@ -6,9 +6,11 @@ import 'package:instagram_clone/colors.dart';
 import 'package:instagram_clone/feature/presentation/pages/main_screen/profile/editprofile.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_client_helper/http_client_helper.dart';
+import 'package:instagram_clone/feature/services/model.dart';
 import '../../../widget/button_widget.dart';
 import '../../../widget/flexiible_button_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dio/dio.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -45,12 +47,29 @@ class _ProfilePageState extends State<ProfilePage>
       var body = jsonDecode(response.body);
 
       // print('body:$body');
-      // print('username:${body['user']['username']}');
-
+      // print('username:${body['user']['username']}')
       return body;
     } else {
       print('statuscode:${response.statusCode}');
       throw Exception('Failed to fetch userdata');
+    }
+  }
+
+  Future<List<dynamic>> getUserPosts() async {
+    String userPostEndPoint = "http://10.0.2.2:8000/postedImage/";
+    Uri uri = Uri.parse(userPostEndPoint);
+    String? token = await storage.read(key: 'token');
+
+    var request = await http.get(uri, headers: {
+      'Authorization': 'Bearer $token',
+    });
+
+    if (request.statusCode == 200) {
+      var body = jsonDecode(request.body);
+      return body;
+    } else {
+      print('error user on user post ${request.statusCode}');
+      throw Exception('failed to fetch');
     }
   }
 
@@ -374,7 +393,45 @@ class _ProfilePageState extends State<ProfilePage>
                   Expanded(
                     child: Container(
                       child: TabBarView(controller: _tabController, children: [
-                        Container(child: Center(child: Text("fisrst"))),
+                        FutureBuilder(
+                            future: getUserPosts(),
+                            builder: ((context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Text(
+                                  "Loading..",
+                                  style: TextStyle(color: Colors.white),
+                                );
+                              } else if (snapshot.hasData) {
+                                print('data${snapshot.data}');
+                                List<dynamic> data = snapshot.data ?? [];
+                                List<Post> posts = data
+                                    .map((item) => Post.fromJson(item))
+                                    .toList();
+                                String baseAddress = 'http://10.0.2.2:8000';
+
+                                return GridView.builder(
+                                    itemCount: posts.length,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 3,
+                                            crossAxisSpacing: 2,
+                                            mainAxisSpacing: 2),
+                                    itemBuilder: (context, index) {
+                                      final post = posts[index];
+                                      return Container(
+                                          width: 100,
+                                          height: 200,
+                                          child: Image.network(
+                                              '$baseAddress${post.postedImage}'));
+                                    });
+                              } else if (snapshot.hasError) {
+                                print("gettingposterror-${snapshot.error}");
+                                return Text('error');
+                              } else {
+                                return Text('else blcokc');
+                              }
+                            })),
                         Center(
                           child: Text("SECOND"),
                         ),

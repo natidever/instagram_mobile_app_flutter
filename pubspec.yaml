@@ -44,6 +44,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http_client_helper: ^3.0.0
   flutter_secure_storage: ^9.0.0
+  dio: ^5.4.0
 
 dev_dependencies:
   flutter_test:

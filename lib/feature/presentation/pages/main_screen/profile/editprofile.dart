@@ -3,8 +3,6 @@ import 'package:instagram_clone/colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:instagram_clone/feature/presentation/widget/button_widget.dart';
-import 'package:instagram_clone/feature/presentation/widget/customtextbutton.dart';
-import 'package:path/path.dart';
 import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -31,6 +29,10 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
+
+
+
+
   Future<void> upload_profile_picture() async {
     print("uploadFunction");
     String? token = await storage.read(key: 'token');
@@ -38,6 +40,7 @@ class _EditProfileState extends State<EditProfile> {
 
     String? profile_uploadin_end_point =
         'http://10.0.2.2:8000/upload-profile-picture/';
+        
     Uri uri = Uri.parse(profile_uploadin_end_point);
     var request = http.MultipartRequest('POST', uri);
     request.headers.addAll({
@@ -53,6 +56,12 @@ class _EditProfileState extends State<EditProfile> {
 
     // await request.headers.addAll({});
   }
+
+
+
+
+
+
 
   Future<void> update_profile(BuildContext context) async {
     String? update_endpoint = 'http://10.0.2.2:8000/update-profile/';

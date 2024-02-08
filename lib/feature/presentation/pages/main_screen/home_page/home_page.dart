@@ -70,11 +70,29 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.blue,
                               shape: BoxShape.circle,
                             ),
-                            child: IconButton(
-                              icon: Icon(Icons.add, color: Colors.white),
-                              onPressed: () {
-                                // Add your onPressed logic here
-                              },
+                            // child: Center(
+                            //     child: IconButton(
+                            //   icon: Icon(Icons.add, color: Colors.white),
+                            //   onPressed: () {
+                            //     // Add your onPressed logic here
+                            //   },
+                            // )),
+
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 0,
+                                  right: 5,
+                                  bottom: 2,
+                                  top: 0,
+                                  child: IconButton(
+                                    icon: Icon(Icons.add, color: Colors.white),
+                                    onPressed: () {
+                                      // Add your onPressed logic here
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),
@@ -141,7 +159,7 @@ class _HomePageState extends State<HomePage> {
             verticalSpace(5),
             Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.3,
+              height: MediaQuery.of(context).size.height * 0.7,
               color: Colors.white24,
             ),
             verticalSpace(5),
